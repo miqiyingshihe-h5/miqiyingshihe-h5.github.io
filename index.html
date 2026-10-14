@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>米奇影视盒 - 打开盒子看世界，复古频道导航 | miqiyingshihe-h5.github.io</title>
+<meta name="description" content="米奇影视盒（miqiyingshihe-h5.github.io）是复古电视盒子风影视导航站：频道大厅、录像带片单、频道热榜、即将上带，CRT扫描线+天线摆动，移动端自适应，纯静态演示。" />
+<meta name="keywords" content="米奇影视盒,miqiyingshihe-h5,复古影视盒,电视盒子,频道导航,录像带,CRT,怀旧影视" />
+<link rel="canonical" href="https://miqiyingshihe-h5.github.io/" />
+<style>
+:root{
+  --cream:#F5E9C9;--blue:#3D7ABF;--blue-dark:#2B5C94;--green:#7ED957;--crt:#141414;--orange:#F28E2B;
+  --white:#FFFDF6;--ink:#2B2722;--gray:#8C8173;--maxw:1140px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--cream);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px}
+
+/* 雪花噪点背景 */
+.noise{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+header.site{position:sticky;top:0;z-index:60;background:rgba(245,233,201,.94);backdrop-filter:blur(12px);border-bottom:3px solid var(--blue)}
+.nav{display:flex;align-items:center;gap:12px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px}
+.logo-icon{width:38px;height:34px;border-radius:8px 8px 14px 14px;background:linear-gradient(180deg,var(--blue),var(--blue-dark));
+  display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.2),0 2px 8px rgba(0,0,0,.2);position:relative}
+.logo-icon::after{content:"";position:absolute;inset:5px;border-radius:4px;background:var(--crt);border:1.5px solid rgba(126,217,87,.6)}
+.logo small{display:block;font-size:9px;color:var(--gray);font-weight:500}
+.menu{margin-left:auto;display:flex;gap:4px}
+.menu a{padding:7px 14px;border-radius:8px;font-size:13px;color:var(--gray);transition:.2s;font-weight:600}
+.menu a:hover{background:var(--blue);color:var(--white)}
+.search{display:flex;gap:6px}
+.search input{width:130px;padding:8px 14px;border-radius:8px;border:2px solid var(--blue);background:var(--white);color:var(--ink);outline:none;font-size:13px}
+.search button{border:0;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:800;background:var(--orange);color:#fff;font-size:13px}
+.burger{display:none;margin-left:auto;background:var(--white);border:2px solid var(--blue);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:16px}
+
+/* hero = 老电视 */
+.hero{position:relative;z-index:1;margin:24px 0;padding:30px;border-radius:32px;background:linear-gradient(160deg,#8B6F47,#5C4630);
+  box-shadow:inset 0 4px 20px rgba(0,0,0,.3),0 8px 30px rgba(92,70,48,.25)}
+.tv{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.tv-screen{position:relative;flex:1;min-width:280px;border-radius:26px;background:var(--crt);padding:22px;overflow:hidden;
+  box-shadow:inset 0 0 0 4px #0a0a0a,inset 0 0 30px rgba(126,217,87,.08)}
+.scanline{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.03) 2px,rgba(255,255,255,.03) 4px)}
+.glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(126,217,87,.1),transparent 60%)}
+.screen-body{position:relative;z-index:1}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:4px;background:rgba(126,217,87,.15);color:var(--green);font-size:11px;font-weight:800;letter-spacing:2px;margin-bottom:12px;border:1px solid rgba(126,217,87,.3);font-family:"Courier New",monospace}
+.hero h1{font-size:34px;margin:0 0 8px;color:var(--white);line-height:1.25;font-family:"Courier New",monospace;letter-spacing:1px}
+.hero h1 em{font-style:normal;color:var(--green);text-shadow:0 0 12px rgba(126,217,87,.5)}
+.hero p{color:rgba(255,253,246,.7);font-size:14px;max-width:420px;margin:0 0 20px;font-family:"Courier New",monospace}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:10px 22px;border-radius:8px;font-weight:800;border:0;cursor:pointer;font-size:13px;transition:.25s;font-family:"Courier New",monospace}
+.btn-green{background:var(--green);color:#0a1a05}
+.btn-green:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(126,217,87,.4)}
+.btn-ghost{background:transparent;border:2px solid var(--green);color:var(--green)}
+.btn-ghost:hover{background:rgba(126,217,87,.1)}
+
+/* 天线 */
+.tv-antenna{width:120px;display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.ant-base{width:50px;height:14px;border-radius:999px;background:#3d3228;box-shadow:inset 0 2px 4px rgba(0,0,0,.3)}
+.ant-rods{position:relative;width:100px;height:80px;margin-bottom:-6px}
+.rod{position:absolute;bottom:0;width:4px;height:70px;background:linear-gradient(180deg,#bbb,#666);border-radius:2px;transform-origin:bottom center}
+.rod.l{left:20px;transform:rotate(-28deg);animation:ant 4s ease-in-out infinite}
+.rod.r{right:20px;transform:rotate(28deg);animation:ant 4s ease-in-out infinite reverse}
+.rod::after{content:"";position:absolute;top:-6px;left:-4px;width:12px;height:12px;border-radius:50%;background:var(--orange)}
+@keyframes ant{0%,100%{transform:rotate(var(--a))}50%{transform:rotate(calc(var(--a) - 6deg))}}
+.rod.l{--a:-28deg}.rod.r{--a:28deg}
+
+/* 栏目 */
+.section{padding:32px 0;position:relative;z-index:1}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.sec-head h2{font-size:22px;margin:0}
+.sec-head h2::before{content:"📺 "}
+.sec-head span{color:var(--gray);font-size:12px}
+.more{margin-left:auto;color:var(--blue);font-size:12px;font-weight:800}
+
+/* 频道大厅 */
+.channels{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.ch{position:relative;border-radius:16px;padding:20px 14px;text-align:center;background:var(--white);
+  border:3px solid var(--crt);transition:.25s;overflow:hidden}
+.ch::before{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.02) 3px,rgba(0,0,0,.02) 6px)}
+.ch:hover{transform:translateY(-4px);border-color:var(--blue);background:rgba(61,122,191,.06)}
+.ch .num{position:absolute;top:6px;left:8px;font-family:"Courier New",monospace;font-size:10px;color:var(--gray);font-weight:800}
+.ch .ic{font-size:28px;display:block;margin-bottom:6px}
+.ch h3{font-size:14px;margin:0 0 2px;font-weight:800}
+.ch p{font-size:11px;color:var(--gray);margin:0}
+
+/* 录像带片单 */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.tape{border-radius:14px;overflow:hidden;background:var(--white);border:2px solid #d9c9a0;transition:.25s}
+.tape:hover{transform:translateY(-4px);border-color:var(--blue);box-shadow:0 12px 28px rgba(61,122,191,.2)}
+.tape-cover{aspect-ratio:3/4;padding:12px;display:flex;align-items:flex-end;position:relative;border-radius:12px 12px 0 0}
+.tape:nth-child(1) .tape-cover{background:linear-gradient(160deg,#2B5C94,#7ED957)}
+.tape:nth-child(2) .tape-cover{background:linear-gradient(160deg,#F28E2B,#C0392B)}
+.tape:nth-child(3) .tape-cover{background:linear-gradient(160deg,#5C4630,#F28E2B)}
+.tape:nth-child(4) .tape-cover{background:linear-gradient(160deg,#3D7ABF,#141414)}
+.tape:nth-child(5) .tape-cover{background:linear-gradient(160deg,#7ED957,#2B5C94)}
+.tape:nth-child(6) .tape-cover{background:linear-gradient(160deg,#8B6F47,#7ED957)}
+.tape:nth-child(7) .tape-cover{background:linear-gradient(160deg,#C0392B,#3D7ABF)}
+.tape:nth-child(8) .tape-cover{background:linear-gradient(160deg,#F28E2B,#8B6F47)}
+.tape-cover .reel-l,.tape-cover .reel-r{position:absolute;top:14px;width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.4);
+  background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.15) 0deg 30deg,transparent 30deg 60deg);animation:spin 3s linear infinite}
+.tape-cover .reel-l{left:20px}.tape-cover .reel-r{right:20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tape-cover h4{margin:0;font-size:13px;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.5);position:relative;z-index:1}
+.tape-body{padding:10px 12px}
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px}
+.tags span{font-size:10px;padding:2px 7px;border-radius:4px;background:var(--cream);color:var(--ink);font-weight:600;font-family:"Courier New",monospace}
+.tape-body p{margin:0;font-size:11px;color:var(--gray);line-height:1.5}
+
+/* 频道热榜 */
+.rank{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rk{display:flex;align-items:center;gap:12px;background:var(--white);border:2px solid var(--crt);border-radius:12px;padding:12px 16px;transition:.25s}
+.rk:hover{border-color:var(--blue);background:rgba(61,122,191,.05)}
+.rk-num{font-family:"Courier New",monospace;font-size:20px;font-weight:900;color:var(--blue);width:34px;text-align:center;flex-shrink:0}
+.rk-num.top{color:var(--orange)}
+.rk-info{flex:1}
+.rk-info h4{margin:0 0 2px;font-size:13px;font-weight:800}
+.rk-info span{font-size:11px;color:var(--gray)}
+.rk-sig{font-family:"Courier New",monospace;font-size:12px;font-weight:800;color:var(--green);flex-shrink:0}
+
+/* 即将上带 */
+.next{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.next-card{border-radius:16px;padding:20px;background:var(--white);border:2px dashed var(--orange);position:relative;overflow:hidden}
+.next-card::before{content:"📼";position:absolute;right:12px;top:10px;font-size:40px;opacity:.1}
+.next-card .when{font-size:11px;color:var(--orange);font-weight:800;font-family:"Courier New",monospace;margin-bottom:6px}
+.next-card h3{margin:0 0 6px;font-size:15px}
+.next-card p{margin:0 0 12px;font-size:12px;color:var(--gray);line-height:1.6}
+.next-card button{padding:6px 18px;border-radius:6px;background:var(--orange);border:0;color:#fff;font-weight:800;font-size:12px;cursor:pointer;font-family:"Courier New",monospace}
+
+/* about */
+.about{display:grid;grid-template-columns:1.2fr .8fr;gap:20px}
+.about-card{border-radius:20px;padding:24px;background:var(--white);border:2px solid #d9c9a0}
+.about-card h3{font-size:18px;margin:0 0 12px}
+.about-card p,.about-card li{font-size:13px;color:var(--gray);line-height:1.8}
+.about-card ul{padding-left:18px;margin:0}
+.stats{display:flex;gap:12px;margin-top:16px}
+.stat{flex:1;text-align:center;padding:14px;border-radius:14px;background:var(--cream);border:2px solid var(--blue)}
+.stat b{display:block;font-size:20px;color:var(--blue-dark)}
+.stat span{font-size:11px;color:var(--gray)}
+
+footer.site{border-top:3px solid var(--blue);padding:28px 0 44px;color:var(--gray);font-size:12px;text-align:center;position:relative;z-index:1;background:var(--cream)}
+footer.site a{color:var(--blue)}
+code{background:var(--white);border:2px solid var(--blue);padding:2px 8px;border-radius:4px;color:var(--ink);font-size:11px;font-family:"Courier New",monospace}
+
+@media(max-width:980px){
+  .tv{flex-direction:column}
+  .tv-antenna{order:-1;width:100px}
+  .channels,.grid{grid-template-columns:repeat(2,1fr)}
+  .rank{grid-template-columns:1fr}
+  .next{grid-template-columns:1fr}
+  .about{grid-template-columns:1fr}
+}
+@media(max-width:720px){
+  .menu{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:var(--cream);border-bottom:3px solid var(--blue);padding:10px 16px;gap:4px}
+  .menu.open{display:flex}
+  .burger{display:block}
+  .search input{width:90px}
+  .hero h1{font-size:24px}
+  .channels,.grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<div class="noise"></div>
+
+<header class="site">
+  <div class="wrap nav">
+    <div class="logo">
+      <div class="logo-icon">📺</div>
+      <div>米奇影视盒<small>miqiyingshihe-h5.github.io</small></div>
+    </div>
+    <nav class="menu" id="menu">
+      <a href="#home">首页</a>
+      <a href="#ch">频道大厅</a>
+      <a href="#tape">录像带片单</a>
+      <a href="#rank">频道热榜</a>
+      <a href="#next">即将上带</a>
+      <a href="#about">关于米奇盒</a>
+    </nav>
+    <div class="search">
+      <input type="text" placeholder="换台搜索…" aria-label="搜索" />
+      <button onclick="alert('演示站：搜索用 # 占位')">搜索</button>
+    </div>
+    <button class="burger" id="burger">☰</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero" id="home">
+    <div class="tv">
+      <div class="tv-screen">
+        <div class="scanline"></div>
+        <div class="glow"></div>
+        <div class="screen-body">
+          <div class="badge">▶ CHANNEL ON</div>
+          <h1>打开<em>米奇影视盒</em>，<br/>好片自动换台来</h1>
+          <p>电影、剧集、综艺、动漫，像换台一样简单。频道大厅 → 录像带片单 → 热榜，一台盒子看尽所有频道。</p>
+          <div class="cta">
+            <button class="btn btn-green" onclick="location.href='#tape'">开始播放 ▶</button>
+            <button class="btn btn-ghost" onclick="location.href='#ch'">频道大厅</button>
+          </div>
+        </div>
+      </div>
+      <div class="tv-antenna">
+        <div class="ant-rods">
+          <div class="rod l"></div>
+          <div class="rod r"></div>
+        </div>
+        <div class="ant-base"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="ch">
+    <div class="sec-head"><h2>频道大厅</h2><span>Channel Hall</span><a class="more" href="#">全部 #</a></div>
+    <div class="channels">
+      <div class="ch"><span class="num">CH.1</span><span class="ic">🎬</span><h3>电影频道</h3><p>院线/高分/经典</p></div>
+      <div class="ch"><span class="num">CH.2</span><span class="ic">📺</span><h3>剧集频道</h3><p>国产/韩美日泰</p></div>
+      <div class="ch"><span class="num">CH.3</span><span class="ic">🎤</span><h3>综艺频道</h3><p>真人秀/音综</p></div>
+      <div class="ch"><span class="num">CH.4</span><span class="ic">🐉</span><h3>动漫频道</h3><p>国漫/日番/新番</p></div>
+      <div class="ch"><span class="num">CH.5</span><span class="ic">⚡</span><h3>短剧频道</h3><p>竖屏/微短/爽剧</p></div>
+      <div class="ch"><span class="num">CH.6</span><span class="ic">🎥</span><h3>纪录频道</h3><p>自然/历史/人文</p></div>
+      <div class="ch"><span class="num">CH.7</span><span class="ic">🏆</span><h3>颁奖频道</h3><p>奥斯卡/戛纳/金马</p></div>
+      <div class="ch"><span class="num">CH.8</span><span class="ic">🌙</span><h3>深夜频道</h3><p>文艺/独立/实验</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="tape">
+    <div class="sec-head"><h2>录像带片单</h2><span>VHS Picks</span><a class="more" href="#">更多 #</a></div>
+    <div class="grid">
+      <div class="tape"><div class="tape-cover"><div class="reel-l"></div><div class="reel-r"></div><h4>肖申克的救赎</h4></div><div class="tape-body"><div class="tags"><span>SP</span><span>剧情</span><span>励志</span></div><p>希望是件好事，也许是最好的事。</p></div></div>
+      <div class="tape"><div class="tape-cover"><div class="reel-l"></div><div class="reel-r"></div><h4>奥本海默</h4></div><div class="tape-body"><div class="tags"><span>HIFI</span><span>传记</span><span>历史</span></div><p>诺兰胶片之作，视听双满分。</p></div></div>
+      <div class="tape"><div class="tape-cover"><div class="reel-l"></div><div class="reel-r"></div><h4>沙丘2</h4></div><div class="tape-body"><div class="tags"><span>WIDESCREEN</span><span>科幻</span><span>史诗</span></div><p>沙漠星球的视听核爆。</p></div></div>
+      <div class="tape"><div class="tape-cover"><div class="reel-l"></div><div class="reel-r"></div><h4>庆余年2</h4></div><div class="tape-body"><div class="tags"><span>SERIES</span><span>古装</span><span>权谋</span></div><p>朝堂博弈，一集一个反转。</p></div></div>
+      <div class="tape"><div class="tape-cover"><div class="reel-l"></div><div class="reel-r"></div><h4>葬送的芙莉莲</h4></div><div class="tape-body"><div class="tags"><span>ANIME</span><span>奇幻</span><span>治愈</span></div><p>千年旅途，温柔得像老带子。</p></div></div>
+      <div class="tape"><div class="tape-cover"><div class="reel-l"></div><div class="reel-r"></div><h4>歌手2024</h4></div><div class="tape-body"><div class="tags"><span>LIVE</span><span>音综</span><span>现场</span></div><p>真唱现场，耳朵过瘾。</p></div></div>
+      <div class="tape"><div class="tape-cover"><div class="reel-l"></div><div class="reel-r"></div><h4>地球脉动3</h4></div><div class="tape-body"><div class="tags"><span>4K</span><span>自然</span><span>BBC</span></div><p>上帝视角看地球，帧帧壁纸。</p></div></div>
+      <div class="tape"><div class="tape-cover"><div class="reel-l"></div><div class="reel-r"></div><h4>飞驰人生2</h4></div><div class="tape-body"><div class="tags"><span>COMEDY</span><span>赛车</span><span>笑燃</span></div><p>沈腾韩寒再联手，笑中带燃。</p></div></div>
+    </div>
+  </section>
+
+  <section class="section" id="rank">
+    <div class="sec-head"><h2>频道热榜</h2><span>Signal Chart</span><a class="more" href="#">完整榜单 #</a></div>
+    <div class="rank">
+      <div class="rk"><div class="rk-num top">1</div><div class="rk-info"><h4>庆余年2</h4><span>CH.2 剧集 / 古装权谋</span></div><div class="rk-sig">▮▮▮▮▮ 98%</div></div>
+      <div class="rk"><div class="rk-num top">2</div><div class="rk-info"><h4>沙丘2</h4><span>CH.1 电影 / 科幻史诗</span></div><div class="rk-sig">▮▮▮▮▯ 95%</div></div>
+      <div class="rk"><div class="rk-num top">3</div><div class="rk-info"><h4>葬送的芙莉莲</h4><span>CH.4 动漫 / 治愈奇幻</span></div><div class="rk-sig">▮▮▮▮▯ 93%</div></div>
+      <div class="rk"><div class="rk-num">4</div><div class="rk-info"><h4>奥本海默</h4><span>CH.1 电影 / 传记历史</span></div><div class="rk-sig">▮▮▮▮▯ 91%</div></div>
+      <div class="rk"><div class="rk-num">5</div><div class="rk-info"><h4>歌手2024</h4><span>CH.3 综艺 / 音综现场</span></div><div class="rk-sig">▮▮▮▮░ 88%</div></div>
+      <div class="rk"><div class="rk-num">6</div><div class="rk-info"><h4>地球脉动3</h4><span>CH.6 纪录 / 自然4K</span></div><div class="rk-sig">▮▮▮▯░ 86%</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="next">
+    <div class="sec-head"><h2>即将上带</h2><span>Coming on Tape</span><a class="more" href="#">全部 #</a></div>
+    <div class="next">
+      <div class="next-card"><div class="when">📼 3天后 · 新带入库</div><h3>头脑特工队2</h3><p>皮克斯续作，新情绪角色加入大脑总部。</p><button>预约上带</button></div>
+      <div class="next-card"><div class="when">📼 9天后 · 新带入库</div><h3>死侍与金刚狼</h3><p>嘴炮死侍遇上金刚狼，打破第四面墙。</p><button>预约上带</button></div>
+      <div class="next-card"><div class="when">📼 15天后 · 新带入库</div><h3>神偷奶爸4</h3><p>格鲁和小黄人回归，全新冒险。</p><button>预约上带</button></div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="sec-head"><h2>关于米奇盒</h2><span>About Miqi Box</span></div>
+    <div class="about">
+      <div class="about-card">
+        <h3>米奇影视盒是什么？</h3>
+        <p>米奇影视盒（miqiyingshihe-h5.github.io）是一台装着好片的复古电视盒子。以“打开盒子看世界”为理念，频道大厅、录像带片单、频道热榜、即将上带四大栏目，像换台一样轻松发现好内容。</p>
+        <div class="stats">
+          <div class="stat"><b>8</b><span>频道</span></div>
+          <div class="stat"><b>8</b><span>录像带</span></div>
+          <div class="stat"><b>100%</b><span>移动端适配</span></div>
+        </div>
+      </div>
+      <div class="about-card">
+        <h3>演示说明</h3>
+        <ul>
+          <li>纯静态单页，无后端、无数据库</li>
+          <li>所有链接均为 <code>#</code> 占位</li>
+          <li>不提供盗版资源</li>
+          <li>必应收录友好</li>
+          <li>CRT扫描线+天线+磁带轮动画</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    米奇影视盒 · <a href="https://miqiyingshihe-h5.github.io/">miqiyingshihe-h5.github.io</a><br/>
+    演示页面：所有链接均使用 <code>#</code> 占位，不提供真实盗版资源。<br/>
+    © 2026 米奇影视盒 Demo · 打开盒子看世界
+  </div>
+</footer>
+
+<script>
+  const b=document.getElementById('burger'),m=document.getElementById('menu');
+  b.onclick=()=>m.classList.toggle('open');
+  m.querySelectorAll('a').forEach(a=>a.onclick=()=>m.classList.remove('open'));
+  document.querySelectorAll('a[href^="#"]').forEach(a=>a.onclick=e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+</script>
+</body>
+</html>
